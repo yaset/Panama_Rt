@@ -11,10 +11,8 @@
 #### Direction of repository https://github.com/CSSEGISandData/COVID-19
 
 #### LOAD DATA ######
-data_death <- read_csv("~/Documentos/GIT/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv")
- 
 ### Update with repository. You should clone repository of JH and make a fixed route
-data_reported <- read_csv("~/Documentos/GIT/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")
+data_reported <- read_csv("data/time_series_covid19_confirmed_global.csv")
 #####Functions countries
 ### Countries: To fix original database for each country
 
