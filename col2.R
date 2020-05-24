@@ -1,4 +1,4 @@
-rm(list = ls())
+rm(list = ls()) #### Limpia el cache
 
 
 #### Libraries
@@ -8,40 +8,35 @@ source("function/data_covid.R") #### Load data and functions to fix data
 source("function/functions.R") ### Load functions to analysis
 
 #### Load database
-data <- read_excel("data/Data_Colombia_17May2020.xlsx")
+data <- read_excel("data/Data_Colombia_17May2020.xlsx") ### carga la base de datos
 
-data$FIS <- as.Date(data$FIS, format = "%Y-%m-%d")
-data$Tipo
+data$FIS <- as.Date(data$FIS, format = "%Y-%m-%d") ### ajusta la edad
 
-data_pan <- data %>%
+data_pan <- data %>%  ##### selecionamos a los locales
   filter(Tipo == "Relacionado" | Tipo == "En estudio")
-
-summary(data_pan$Tipo)
-  
 
 #### incidence object
 
 fis <- incidence(data_pan$FIS) ### incidencia por tipo de caso
+### PRIMER RESULTADO
 fis
-
 plot(fis, border = "Black", color = "SteelBlue")+
   theme_classic()
 
+
 ###### daily growth rate
 ### general
-
+##### evaluacion en los primeros 45 dias
 fis2 <- fis[1:45]
 ppt1 <- plot(fis2, border = "Black", color = "SteelBlue")+
   theme_classic()
 
-###exponentail growth rate
-general <- fit(fis2)
-plot(general)
-g2 <- fit(fis[1:15])
-g3 <- fit(fis[15:30])
+#### fitting for exponential growth rate
+general <- fit(fis2)### general
+g2 <- fit(fis[1:15]) #### los primeros 15 dias
+g3 <- fit(fis[15:30]) ##### del dia 15 al dia 30
 
-general
-
+### grafico que los compara
 ge <- plot(fis2, border = "Black", color = "SteelBlue", fit = general)+
   labs(title = "General")
 
@@ -50,9 +45,12 @@ ge2 <- plot(fis2, border = "Black", color = "SteelBlue", fit = g3)+
 
 grid.arrange(ge,ge2,nrow = 1)
 
-
+##########################################3
 ##### Estimacion del serial interval
+#######################################
 
+
+##### Segun Nishiura
 mean_si = 4.7
 std_si = 2.9
 cv <- mean_si/ std_si
@@ -67,38 +65,56 @@ discrete_si_distr <- discr_si(seq(0,20),mean_si,std_si)
 plot(seq(0,20),discrete_si_distr, type = "b", lwd = 2, lend = 1, xlab = "time (days)", ylab = "frequency")
 title(main = "Discrete distribution of the serial interval of COVID-19")
 
+
+#############################################
 ####### Estimations of R0
+#############################################
 
-### exponential growth rate
+
+#####################################33
+### METHOD: exponential growth rate
 
 
-pan30 <- fis$counts[1:30] #### LINEA CRITICA!!!
-names(pan30) <- fis$dates[1:30]
+pan30 <- fis$counts[1:45]  ###### evaluacion en los primeros 45 dias
+names(pan30) <- fis$dates[1:45]
+
+
+##### Calculo usando R0 de Thomas Obadia
 si <- generation.time(type = "gamma", c(4.7,2.9))
-EG <- est.R0.EG(pan30,si,begin = 1,end = 30)
 
-EG2 <- sensitivity.analysis(pan30, GT = si, est.method = "EG", sa.type = "time",
-                            begin = 1:15, end = 16:30)
-
-
-plot(EG2)
-
-EG$Rsquared
-c(EG$R,EG$conf.int)
-c(EG$r,EG$conf.int.r)
+#### Calculo inicial de 1-45
+EG <- est.R0.EG(pan30,si,begin = 1,end = 45)
+EG
 plotfit(EG)
+
+###### Analisis de Sensibilidad
+EG2 <- sensitivity.analysis(pan30, GT = si, est.method = "EG", sa.type = "time",
+                            begin = 1:22, end = 23:44)
+
+###### TIENE QUE CORRER ESTA LINEA PARA SABER EL RESULTADO DEL BEST FIT
+plot(EG2) ##### sale el grafico y en la consola sale el resultado del mejor tiempo
+
+
+####################################3
+#EG$Rsquared
+#c(EG$R,EG$conf.int)
+#c(EG$r,EG$conf.int.r)
+#plotfit(EG)
+########################################3
+
+
 
 #### New calculate based on the results of sensitivy analysis 
 EG3 <- est.R0.EG(pan30,si,begin = 1,end = 22)
-EG3$Rsquared
+EG3
+sample(EG3)
 plotfit(EG3)
 ## Maximum likelihood
-ML <- est.R0.ML(epid = pan30,begin = 1, end = 30, GT = si)
+ML <- est.R0.ML(epid = pan30,begin = 1, end = 22, GT = si)
 ML
 ML$Rsquared
 plot(ML)
 plotfit(ML)
-
 
 
 ml <- ML$pred
@@ -118,7 +134,7 @@ plotfit(ML)
 
 cum <- cumulate(fis2)
 cum$counts
-x<- get_R(fis2[15:30], si_mean = 4.7, si_sd = 2.9) ### VENTANA DESDE EL DIA 15
+x<- get_R(fis2[6:22], si_mean = 4.7, si_sd = 2.9) ### VENTANA DESDE casos que sean 12
 x$R_like
 x$R_ml
 
@@ -232,6 +248,30 @@ incid2 +
 
   
 
+##### Projections
+
+model_t <- project(fis[1:29], R = R_median,
+                   si = discrete_si_distr,
+                   n_sim = 10, 
+                   n_days = 14)
 
 
+sample_R <- function(R, n_sim = 1000)
+{
+  mu <- R$R$`Mean(R)`
+  sigma <- R$R$`Std(R)`
+  Rshapescale <- gamma_mucv2shapescale(mu = mu, cv = sigma / mu)
+  R_sample <- rgamma(n_sim, shape = Rshapescale$shape, scale = Rshapescale$scale)
+  return(R_sample)
+}
+
+R <- res
+R_sample <- sample_R(R, 1000)
+R_median <- median(R_sample) # sample 1000 values of R from the posterior distribution
+hist(R_sample, col = "grey")  # plot histogram of sample
+abline(v = R_median, col = "red") # show the median estimated R as red solid vertical line
+abline(v = R_CrI, col = "red", lty = 2) # show the 95%CrI of R as red dashed vertical lines
+
+plot(fis[1:45]) %>% add_projections(model_t,c(0.025,0.5,0.975))+
+  geom_vline(xintercept = 20)
 
