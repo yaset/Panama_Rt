@@ -10,6 +10,8 @@ source("function/functions.R") ### Load functions to analysis
 #### Load database
 data_pan <- read_excel("data/POSITIVOSARSCOV-4.xlsx")
 
+summary(data_pan$tiempodelay)
+
 data_pan %>%
   tabyl(Type_of_case)
 
@@ -103,23 +105,57 @@ title(main = "Discrete distribution of the serial interval of COVID-19")
 
 ### exponential growth rate
 
+
 pan30 <- fis$counts[1:30] #### LINEA CRITICA!!!
 names(pan30) <- fis$dates[1:30]
 si <- generation.time(type = "gamma", c(4.7,2.9))
 EG <- est.R0.EG(pan30,si,begin = 1,end = 30)
-EG
+
+EG2 <- sensitivity.analysis(pan30, GT = si, est.method = "EG", sa.type = "time",
+                            begin = 1:15, end = 16:30)
+
+
+plot(EG2)
+
+EG$Rsquared
 c(EG$R,EG$conf.int)
 c(EG$r,EG$conf.int.r)
+plotfit(EG)
+
+#### New calculate based on the results of sensitivy analysis 
+EG3 <- est.R0.EG(pan30,si,begin = 5,end = 30)
+EG3$Rsquared
 
 ## Maximum likelihood
 ML <- est.R0.ML(epid = pan30,begin = 1, end = 30, GT = si)
 ML
+ML$Rsquared
 plot(ML)
 plotfit(ML)
 
+
+
+ml <- ML$pred
+eg1 <- data.frame(EG$pred, EG$epid$t, EG$epid$incid)
+names(eg1) <- c("pred", "t", "incid")
+eg2 <- EG3$pred
+
+eg1$t[5:30]
+
+
+plotfit(EG)
+plotfit(EG3)
+plotfit(ML)
+
+
 #### Early - likelihood-based estimation using branching process
 
+cum <- cumulate(fis2)
+cum$counts
 x<- get_R(fis2[15:30], si_mean = 4.7, si_sd = 2.9) ### VENTANA DESDE EL DIA 15
+x$R_like
+x$R_ml
+
 
 R_val  <- sample_R(x,1000)
 summary(R_val)
@@ -131,11 +167,9 @@ hist(R_val, border = "Black", col = "navy",
 x$incidence$n
 print(x)
 
-
-
-
-
-
+x
+aa <- sim.epid(epid.nb = 100,GT = si, R0 = 1.55, epid.length = 100,family = "poisson", peak.value = 50)
+apply(aa,2,mean)
 
 ### Calculo del Rt, por una ventana de 10 dias since 20 day had 25 cases of cumulative incidence
 
@@ -151,9 +185,9 @@ t_end <- t_start + 5
 res <- estimate_R(incid = fis2[20:30],
                   method = "non_parametric_si",
                   config = make_config(list(
-                    si_distr = discrete_si_distr)))
-                    #t_start = t_start,
-                    #t_end = t_end)))
+                    si_distr = discrete_si_distr,
+                    t_start = t_start,
+                    t_end = t_end)))
 
 
 
@@ -213,6 +247,11 @@ incid2 +
               mapping = aes(x = as.Date(dates),ymin = CI.lower.*scala, ymax = CI.upper.*scala),
               alpha = 0.3, fill = "Green",
               inherit.aes = FALSE)+
+  scale_y_continuous(name = "Daily Incidence",
+                     sec.axis = sec_axis(~ ./scala, name = "Rt"))+
+  labs(title = "Rt by the Bettencourt's Method")
+
+incid2 + 
   geom_line(data = combine,
             mapping = aes(x = dates, y = `Mean(R)`*scala), 
             inherit.aes = FALSE)+
@@ -221,9 +260,10 @@ incid2 +
               alpha = 0.3, fill = "Red",
               inherit.aes = FALSE)+
   scale_y_continuous(name = "Daily Incidence",
-                     sec.axis = sec_axis(~ ./scala, name = "Rt"))
-  
+                     sec.axis = sec_axis(~ ./scala, name = "Rt"))+
+  labs(title = "Rt by the Cori's Method")
 
+  
 
 
 

@@ -13,6 +13,7 @@
 #### LOAD DATA ######
 ### Update with repository. You should clone repository of JH and make a fixed route
 data_reported <- read_csv("data/time_series_covid19_confirmed_global.csv")
+data_death <- read_csv("data/time_series_covid19_deaths_global.csv")
 #####Functions countries
 ### Countries: To fix original database for each country
 
