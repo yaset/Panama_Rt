@@ -40,6 +40,7 @@ centro1 <- ggplot(data = tt, aes( x = dates, y = log(values)))+
   geom_line(aes(color = ind))+
   labs(color = "Countries", labels = central_america)+
   ylab("Log(Cumulative Cases)")+
+  xlab("")+
   theme_cowplot()+
   scale_y_continuous(breaks = seq(1000,10000,by = 1000))+
   scale_color_lancet(labels = central_america)
