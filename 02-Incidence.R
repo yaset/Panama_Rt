@@ -1,66 +1,22 @@
-rm(list = ls())
 
-
-#### Libraries
-
-source("function/libraries.R") #### Libraries  
-source("function/data_covid.R") #### Load data and functions to fix data
-source("function/functions.R") ### Load functions to analysis
-
-#### Load database
-data_pan <- read_excel("data/POSITIVOSARSCOV-4.xlsx")
-
-summary(data_pan$tiempodelay)
-
-data_pan %>%
-  tabyl(Type_of_case)
-
-data_pan <- data_pan %>%
-  filter(Type_of_case == "local" | Type_of_case == "imported")
-
-summary(data_pan$Type_of_case)
-  
+data <- read.csv("data/Panama_data.csv")
 
 #### Fixing for date class
-data_pan <- data_pan %>%
-  filter(Type_of_case == "local")
 
-data_pan2 <- as.Date(data_pan$Inicio_Sintomas, format = "%Y-%m-%d")
+data <- data %>%
+  filter(Type_of_case == "local" )
+
+dates_fis <- as.Date(data$fis, format = "%Y-%m-%d")
 
 
 #### incidence object
 
-fis <- incidence(data_pan2) ### incidencia por tipo de caso
-fis
+fis <- incidence(dates_fis) ### incidencia por tipo de caso
+fis <- fis[1:60]
 
 plot(fis, border = "Black", color = "SteelBlue")+
   theme_classic()
 
-#### Cases distribution
-data_pan <- data_pan %>%
-  mutate(age2 = case_when(
-    Age <= 10 ~ 1,
-    Age > 10 & Age <= 20 ~ 2,
-    Age > 20 & Age <= 30 ~ 3,
-    Age > 30 & Age <= 40 ~ 4,
-    Age > 40 & Age <= 50 ~ 5,
-    Age > 50 & Age <= 60 ~ 6,
-    Age > 60 & Age <= 70 ~ 7,
-    Age > 80 ~ 8,
-  ))
-
-data_pan$age2 <- as.factor(data_pan$age2)
-levels(data_pan$age2) <- c("< 10","10-20","20-30",
-                            "30-40","40-50","50-60",
-                            "60-70","70-80","> 80")
-
-ggplot(data = data_pan,aes( x = age2,fill = Sex))+
-  geom_bar(data = subset(data_pan,Sex == "Female"))+
-  geom_bar(data = subset(data_pan,Sex == "Male"),aes(y = ..count..*(-1)))+
-  coord_flip()+
-  scale_y_continuous(breaks=seq(-200,200,50),labels=abs(seq(-200,200,50)))+
-  xlab("")+
-  ylab("")
 
 ###### daily growth rate
 ### general
@@ -263,7 +219,7 @@ incid2 +
                      sec.axis = sec_axis(~ ./scala, name = "Rt"))+
   labs(title = "Rt by the Cori's Method")
 
-  
+
 
 
 
