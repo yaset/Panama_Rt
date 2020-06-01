@@ -13,7 +13,8 @@ data <- read_excel("data/Data_Colombia_17May2020.xlsx") ### carga la base de dat
 data$FIS <- as.Date(data$FIS, format = "%Y-%m-%d") ### ajusta la edad
 
 data_pan <- data %>%  ##### selecionamos a los locales
-  filter(Tipo == "Relacionado" | Tipo == "En estudio")
+  filter(Tipo == "Relacionado" | Tipo == "En estudio") %>%
+  filter(`Ciudad de ubicación` == "Cali")
 
 #### incidence object
 
@@ -105,9 +106,8 @@ plot(EG2) ##### sale el grafico y en la consola sale el resultado del mejor tiem
 
 
 #### New calculate based on the results of sensitivy analysis 
-EG3 <- est.R0.EG(pan30,si,begin = 1,end = 22)
+EG3 <- est.R0.EG(pan30,si,begin = 4,end = 25)
 EG3
-sample(EG3)
 plotfit(EG3)
 ## Maximum likelihood
 ML <- est.R0.ML(epid = pan30,begin = 1, end = 22, GT = si)
@@ -134,7 +134,7 @@ plotfit(ML)
 
 cum <- cumulate(fis2)
 cum$counts
-x<- get_R(fis2[6:22], si_mean = 4.7, si_sd = 2.9) ### VENTANA DESDE casos que sean 12
+x<- get_R(fis2, si_mean = 4.7, si_sd = 2.9) ### VENTANA DESDE casos que sean 12
 x$R_like
 x$R_ml
 
@@ -160,18 +160,19 @@ apply(aa,2,mean)
 
 cum <- cumulate(fis2)
 cum$counts
-fis
+fis2
 
-t_start <- seq(2,nrow(fis[6:64])-7)
+
+t_start <- seq(2,nrow(fis[6:70])-7)
 t_end <- t_start + 7
-res <- estimate_R(incid = fis[6:64],
+res <- estimate_R(incid = fis[6:70],
                   method = "non_parametric_si",
                   config = make_config(list(
                     si_distr = discrete_si_distr,
                     t_start = t_start,
                     t_end = t_end)))
 
-
+fis
 
 res$R
 ppt <- plot(res, what = "R")
@@ -243,7 +244,7 @@ incid2 +
               inherit.aes = FALSE)+
   scale_y_continuous(name = "Daily Incidence",
                      sec.axis = sec_axis(~ ./scala, name = "Rt"))+
-  labs(title = "Rt by the Cori's Method")
+   labs(title = "Rt by the Cori's Method")
 
 
   
