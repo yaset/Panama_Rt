@@ -367,7 +367,25 @@ summary {
 
 <div id="analisis-de-la-dinamica-del-brote-en-panama" class="section level2">
 <h2>Analisis de la dinamica del Brote en Panama</h2>
-<p>El presente proyecto tiene como fin describir la dinámica de la pandemia de COVID en Panamá.</p>
+<p>El presente proyecto tiene como fin describir la dinámica de la pandemia de COVID en Panamá. Los archivos que contiene son:</p>
+<p>00-configuracion: Permite crear carpetas e instalar paquetes que no existian antes en el pc</p>
+<p>01-Data_Extraction: De la base de datos original selecciona las siguientes variables de interes:</p>
+<ul>
+<li><p>type_patient: Estado de paciente entre ambulatorio / desconocido / fallecido / hospitalizado</p></li>
+<li><p>sex: Genero</p></li>
+<li><p>age: Edad, años</p></li>
+<li><p>region: ### se debe clarificar la convención de las regiones###</p></li>
+<li><p>corregimiento: ### clarificar la convención de los corregimientos###</p></li>
+<li><p>fis (fecha de inicio de sintomas): Formato %Y-%m-%d (Ejem: 2020-06-01)</p></li>
+<li><p>Fecha_de_recibo: Fecha de recepción de la muestra</p></li>
+<li><p>Fecha_de_reporte: Fecha de notificación del resultado</p></li>
+<li><p>tiempodelay: dias estimado de demora</p></li>
+</ul>
+<p>_ Type_of_case: Estado de estudio del caso importado / locales</p>
+<ul>
+<li>exposition / type_exposition: Lugar de exposicion al virus</li>
+</ul>
+<p>02- Incidence: Es el script que recrea los graficos de incidencias.</p>
 </div>
 
 
