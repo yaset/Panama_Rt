@@ -18,8 +18,6 @@ database_clean <- database_original %>%
 
 
 
-database_clean %>%
-  tabyl(type_patient)
 
 ### Arreglo de datos
 
@@ -41,8 +39,7 @@ database_clean$type_patient[is.na(database_clean$type_patient)] <- "desconocido"
 
 
 ### Sex
-database_clean %>%
-  tabyl(sex)
+
 
 database_clean$sex[database_clean$sex == "Female"] <- "female"
 database_clean$sex[database_clean$sex == "FEMALE"] <- "female"
@@ -51,12 +48,57 @@ database_clean$sex[database_clean$sex == "Male"] <- "male"
 database_clean$sex[database_clean$sex == "MALE"] <- "male"
 database_clean$sex[database_clean$sex == "MASCULINO"] <- "male"
 
+### type of case
+
+database_clean %>%
+  tabyl(Type_of_case)
+
+database_clean$Type_of_case[database_clean$Type_of_case == "imported familiar"] <- "imported"
+database_clean$Type_of_case[is.na(database_clean$Type_of_case)] <- "desconocido"
+
 ## Age
 
 database_clean$age <- as.numeric(database_clean$age)
 database_clean$age[is.na(database_clean$age)] <- rnorm(1, 
                                                        mean = mean(database_clean$age,na.rm = TRUE,
                                                        sd = sd(database_clean$age, na.rm = TRUE)))
+
+#### region
+
+database_clean %>%
+  tabyl(Region)
+
+
+database_clean$Region[database_clean$Region == "Panama"] <- "panama"
+database_clean$Region[database_clean$Region == "PANAMA"] <- "panama"
+database_clean$Region[database_clean$Region == "Panama este"] <- "panama"
+database_clean$Region[database_clean$Region == "Panama Este"] <- "panama"
+database_clean$Region[database_clean$Region == "PANAMA ESTE"] <- "panama"
+database_clean$Region[database_clean$Region == "Panamá Este"] <- "panama"
+database_clean$Region[database_clean$Region == "Panama metro"] <- "panama"
+database_clean$Region[database_clean$Region == "Panama Metro"] <- "panama"
+database_clean$Region[database_clean$Region == "PANAMA METRO"] <- "panama"
+database_clean$Region[database_clean$Region == "Panamá metro"] <- "panama"
+database_clean$Region[database_clean$Region == "Panamá Metro"] <- "panama"
+database_clean$Region[database_clean$Region == "Panama Norte"] <- "panama"
+database_clean$Region[database_clean$Region == "PANAMA NORTE"] <- "panama"
+database_clean$Region[database_clean$Region == "Panamá Norte"] <- "panama"
+database_clean$Region[database_clean$Region == "Panama Oeste"] <- "panama"
+database_clean$Region[database_clean$Region == "PANAMA OESTE"] <- "panama"
+database_clean$Region[database_clean$Region == "Panamá Oeste"] <- "panama"
+database_clean$Region[database_clean$Region == "Panana Metro"] <- "panama"
+database_clean$Region[database_clean$Region == "METROPOLITANA"] <- "panama"
+database_clean$Region[database_clean$Region == "Los Santos"] <- "azuero"
+database_clean$Region[database_clean$Region == "Herrera"] <- "azuero"
+database_clean$Region[database_clean$Region == "HERRERA"] <- "azuero"
+database_clean$Region[database_clean$Region == "Chitré"] <- "azuero"
+database_clean$Region[database_clean$Region == "COLON"] <- "colon"
+database_clean$Region[database_clean$Region == "Colón"] <- "colon"
+database_clean$Region[database_clean$Region == "Bocas del Toro"] <- "bocas del toro"
+database_clean$Region[database_clean$Region == "Veraguas"] <- "veraguas"
+database_clean$Region[database_clean$Region == "VERAGUAS"] <- "veraguas"
+
+
 
 ## fis
 database_clean <- database_clean %>%
@@ -86,6 +128,9 @@ database_clean$fis[is.na(database_clean$fis) & !is.na(database_clean$Fecha_de_re
 
 summary(database_clean$fis)
 
+
+database_clean %>%
+  tabyl(Region)
 
 #### Base de datos para trabajar
 write.csv(database_clean, "data/Panama_data.csv")

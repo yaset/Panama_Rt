@@ -1,29 +1,52 @@
+rm(list = ls())
+#### load data
+source("functions/libraries.R")
+data <- read.csv("data/Panama_data.csv")
+colors.plot <- pal_lancet(palette = "lanonc")(9)
 
-names(data)
 
-data %>%
-  tabyl(region)
+#######################################################################
+### Selecciona solo los locales y excluye los importados
+data <- data %>%
+  filter(Type_of_case == "local" )
 
 
+data$fis <- as.Date(data$fis, format = "%Y-%m-%d")
 
-###### daily growth rate
-### general
+#### Curva Epidemica
 
-fis2 <- fis[1:30]
-ppt1 <- plot(fis2, border = "Black", color = "SteelBlue")+
+data <- data %>%
+  filter(fis >= "2020-02-10" & fis <= "2020-04-20")
+
+dates_fis <- as.Date(data$fis, format = "%Y-%m-%d")
+
+
+fis <- incidence(dates_fis)
+
+#####################################################################
+########### se quitan los ultimos 15 dias de la curva
+####################################################################
+
+fis <- fis[1:45] ##### ESTA LINEA ES VARIABLE, QUEDA 60 POR 60 DIAS DE PANAMA
+
+plot(fis, border = "Black", color = colors.plot[5])+
   theme_classic()
+  labs(title = "Epidemic Curve")
+
+#### daily growth rate
+
 
 ###exponentail growth rate
-general <- fit(fis2)
+general <- fit(fis)
 g2 <- fit(fis[1:15])
-g3 <- fit(fis[15:30])
+g3 <- fit(fis[15:45])
 
 general
 
-ge <- plot(fis2, border = "Black", color = "SteelBlue", fit = general)+
+ge <- plot(fis, border = "Black", color = "SteelBlue", fit = general)+
   labs(title = "General")
 
-ge2 <- plot(fis2, border = "Black", color = "SteelBlue", fit = g3)+
+ge2 <- plot(fis, border = "Black", color = "SteelBlue", fit = g3)+
   labs(title = "15-30 days")
 
 grid.arrange(ge,ge2,nrow = 1)

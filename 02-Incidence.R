@@ -3,6 +3,23 @@ source("functions/libraries.R")
 data <- read.csv("data/Panama_data.csv")
 colors.plot <- pal_lancet(palette = "lanonc")(9)
 
+######## grafico general de casos
+data.imported <- data
+data.imported$fis <- as.Date(data.imported$fis, format = "%Y-%m-%d")
+
+data.imported <- data.imported %>%
+  filter(fis >= "2020-02-10" & fis <= "2020-04-10")
+
+fis.general <- incidence(data.imported$fis, groups = data.imported$Type_of_case)
+
+incidencia <- plot(fis.general, border = "Black", color = colors.plot[c(5,6,7,8)])+
+  theme_classic()+
+  labs(title = "Epidemic Curve")
+
+ggsave("figures/incidence_general.png", width = 7, height = 5)
+
+
+
 
 ### Selecciona solo los locales y excluye los importados
 data <- data %>%
@@ -72,9 +89,10 @@ ggsave("figures/incidence_deaths.png", width = 7, height = 5)
 #### grafico conjunto
 
 resume <- grid.arrange(ambulatorio,hospitalizado,deaths)
-final.png <- arrangeGrob(incidencia,resume, nrow = 1)
 
-ggsave(file = "data/incidence.resume.png",final.png, width = 7, height = 5)
+png("figures/incidence_resume.png", width = 750, height = 500)
+grid.arrange(incidencia,resume, nrow = 1)
+dev.off()
 
 
 #### datos descriptivos basicos
