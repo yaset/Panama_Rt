@@ -30,7 +30,7 @@ fis <- incidence(dates_fis)
 fis <- fis[1:45] ##### ESTA LINEA ES VARIABLE, QUEDA 60 POR 60 DIAS DE PANAMA
 
 plot(fis, border = "Black", color = colors.plot[5])+
-  theme_classic()
+  theme_classic()+
   labs(title = "Epidemic Curve")
 
 #### daily growth rate
@@ -72,14 +72,14 @@ title(main = "Discrete distribution of the serial interval of COVID-19")
 
 ### exponential growth rate
 
-
-pan30 <- fis$counts[1:30] #### LINEA CRITICA!!!
-names(pan30) <- fis$dates[1:30]
-si <- generation.time(type = "gamma", c(4.7,2.9))
-EG <- est.R0.EG(pan30,si,begin = 1,end = 30)
+library(R0)
+pan30 <- fis$counts[1:45] #### LINEA CRITICA!!!
+names(pan30) <- fis$dates[1:45]
+si <- R0::generation.time(type = "gamma", c(4.7,2.9))
+EG <- R0::est.R0.EG(pan30,si,begin = 1,end = 45)
 
 EG2 <- sensitivity.analysis(pan30, GT = si, est.method = "EG", sa.type = "time",
-                            begin = 1:15, end = 16:30)
+                            begin = 1:22, end = 23:44)
 
 
 plot(EG2)
@@ -90,11 +90,13 @@ c(EG$r,EG$conf.int.r)
 plotfit(EG)
 
 #### New calculate based on the results of sensitivy analysis 
-EG3 <- est.R0.EG(pan30,si,begin = 5,end = 30)
+EG3 <- est.R0.EG(pan30,si,begin = 2,end = 38)
+plotfit(EG3)
+
 EG3$Rsquared
 
 ## Maximum likelihood
-ML <- est.R0.ML(epid = pan30,begin = 1, end = 30, GT = si)
+ML <- est.R0.ML(epid = pan30,begin = 1, end = 45, GT = si)
 ML
 ML$Rsquared
 plot(ML)
@@ -119,7 +121,7 @@ plotfit(ML)
 
 cum <- cumulate(fis2)
 cum$counts
-x<- get_R(fis2[15:30], si_mean = 4.7, si_sd = 2.9) ### VENTANA DESDE EL DIA 15
+x<- get_R(fis[1:45], si_mean = 4.7, si_sd = 2.9) ### VENTANA DESDE EL DIA 15
 x$R_like
 x$R_ml
 
@@ -147,9 +149,9 @@ cum <- cumulate(fis2)
 cum$counts
 
 
-t_start <- seq(2,nrow(fis2[20:30])-5)
+t_start <- seq(2,nrow(fis[20:45])-5)
 t_end <- t_start + 5
-res <- estimate_R(incid = fis2[20:30],
+res <- estimate_R(incid = fis[20:45],
                   method = "non_parametric_si",
                   config = make_config(list(
                     si_distr = discrete_si_distr,
@@ -167,8 +169,8 @@ combine <- res$R
 t_stat <- min(res$R$t_end)
 t_end2 <- max(res$R$t_end)
 combine$dates <- res$dates[t_stat:t_end2]
-
-write.xlsx(combine,"pictures/Panama_Rt_Cori.xlsx")
+library(xlsx)
+write.csv(combine,"salidas/Panama_Rt_Cori2.csv")
 
 
 ###sequential bayesian

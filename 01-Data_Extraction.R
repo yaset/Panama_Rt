@@ -54,7 +54,7 @@ database_clean %>%
   tabyl(Type_of_case)
 
 database_clean$Type_of_case[database_clean$Type_of_case == "imported familiar"] <- "imported"
-database_clean$Type_of_case[is.na(database_clean$Type_of_case)] <- "desconocido"
+database_clean$Type_of_case[is.na(database_clean$Type_of_case)] <- "local"
 
 ## Age
 

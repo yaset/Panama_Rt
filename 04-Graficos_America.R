@@ -1,7 +1,7 @@
 rm(list = ls())
-source("function/libraries.R") #### Libraries  
-source("function/data_covid.R") #### Load data and functions to fix data
-source("function/functions.R") 
+source("functions/libraries.R") #### Libraries  
+source("functions/data_covid.R") #### Load data and functions to fix data
+source("functions/functions.R") 
 
 
 central_america <- c("Panama", "Costa Rica", "Belize", "El Salvador", "Guatemala",
@@ -86,7 +86,7 @@ central <- list()
     scale_color_lancet(labels = central_america)
 
 plot_grid(centro1,centro2)
-ggsave("data/centro.jpg", width = 16, height = 8)
+ggsave("figures/centro.jpg", width = 16, height = 8)
   
 ###################################3
 ############################################
@@ -190,7 +190,7 @@ amer2 <- ggplot(data = tt, aes( x = dates, y = log(values)))+
 
 amer2
 plot_grid(centro1,centro2,amer1,amer2)
-ggsave("data/deaths.jpg", width = 15, height = 7.5)
+ggsave("figures/deaths.jpg", width = 15, height = 7.5)
 
 #####################################
 
@@ -277,5 +277,5 @@ car2 <- ggplot(data = tt, aes( x = dates, y = log(values)))+
 car2
 plot_grid(centro1,centro2,amer1,amer2,car1,car2, nrow = 3,
           labels = c("Central America", "", "South America","","North America and Caribean",""))
-ggsave("data/deaths.jpg", width = 20, height = 10)
+ggsave("figures/deaths.jpg", width = 20, height = 10)
 
