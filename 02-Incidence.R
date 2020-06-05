@@ -39,7 +39,7 @@ summary(dates_fis)
 fis <- incidence(dates_fis)
 fis <- fis[1:60] ##### ESTA LINEA ES VARIABLE, QUEDA 60 POR 60 DIAS DE PANAMA
 
-incidencia2 <- plot(fis, border = "Black", color = colors.plot[1])+
+locales <- plot(fis, border = "Black", color = colors.plot[1])+
   theme_classic()+
   labs(title = "Epidemic Curve - Corrected by imported cases")
 
@@ -50,7 +50,7 @@ ggsave("figures/incidence_fix.png", width = 7, height = 5)
 
 fis <- fis[1:45] ##### ESTA LINEA ES VARIABLE, QUEDA 60 POR 60 DIAS DE PANAMA
 
-incidencia3 <- plot(fis, border = "Black", color = colors.plot[2])+
+curva.corrected <- plot(fis, border = "Black", color = colors.plot[2])+
   theme_classic()+
   labs(title = "Epidemic Curve")
 
@@ -109,7 +109,7 @@ ggsave("figures/incidence_deaths.png", width = 7, height = 5)
 resume <- grid.arrange(ambulatorio,hospitalizado,deaths)
 
 png("figures/incidence_resume.png", width = 900, height = 500)
-grid.arrange(incidencia,resume, nrow = 1)
+grid.arrange(fis.general,resume, nrow = 1)
 dev.off()
 
 
