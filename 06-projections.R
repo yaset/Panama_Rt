@@ -41,8 +41,11 @@ w <- distcrete("gamma", interval = 1,
                w = 0)
 
 discrete_si_distr <- discr_si(seq(0,20),mean_si,std_si)
+
+png("figures/SI.png", width = 1000, height = 750)
 plot(seq(0,20),discrete_si_distr, type = "b", lwd = 2, lend = 1, xlab = "time (days)", ylab = "frequency")
 title(main = "Discrete distribution of the serial interval of COVID-19")
+dev.off()
 
 ### Calculo del Rt, por una ventana de 10 dias since 20 day had 25 cases of cumulative incidence
 
@@ -95,8 +98,9 @@ incidencia +
   scale_y_continuous(name = "Daily Incidence",
                      sec.axis = sec_axis(~ ./scala, name = "Rt"))+
   geom_hline(yintercept = scala, color = "Red", linetype = 3)+
-  labs(title = "Rt by the Cori's Method")+
   theme_cowplot()
+
+ggsave("figures/Rt.png",width = 10, height = 5)
 
 ############################################################
 ####### PROJECTIONS
@@ -128,4 +132,4 @@ project <- data.frame(dates = rownames(pro),
 incidencia +
   geom_ribbon(data = project, aes(x = as.Date(dates), ymin = p25, ymax = p97), 
               inherit.aes = FALSE, alpha = 0.5)
-
+ggsave("figures/prueba_proj.png", width = 10, height = 5)

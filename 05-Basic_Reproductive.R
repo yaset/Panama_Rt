@@ -60,13 +60,19 @@ EG
 EG2 <- sensitivity.analysis(pan30, GT = si, est.method = "EG", sa.type = "time",
                             begin = 1:22, end = 23:44)
 
-
+png("figures/sensitive.png", width = 1000, height = 750)
 plot(EG2)
+dev.off()
 
 #### New calculate based on the results of sensitivy analysis 
 EG3 <- est.R0.EG(pan30,si,begin = 2,end = 38)
 EG3
+
+png("figures/EG_fit.png", width = 1000, height = 750)
 plotfit(EG3)
+dev.off()
+
+
 
 EG3$Rsquared
 c(EG3$R,EG3$conf.int)
@@ -77,8 +83,10 @@ ML <- est.R0.ML(epid = pan30, GT = si, range = c(0.01,100))
 ML$end
 ML$Rsquared
 plot(ML)
-plotfit(ML)
 
+png("figures/ML_fit.png", width = 1000, height = 750)
+plotfit(ML)
+dev.off()
 
 ML2 <- est.R0.ML(epid = pan30, GT = si, range = c(0.01,100), begin = 15, end = 38)
 
@@ -98,10 +106,12 @@ x$R_ml
 R_val  <- sample_R(x,1000)
 summary(R_val)
 quantile(R_val, c(0.025,.975))
+
+png("figures/early_r.png", width = 1000, height = 750)
 hist(R_val, border = "Black", col = "navy",
      xlab = "Values of R",
      main = "Sample of likely R values")
-
+dev.off()
 
 
 

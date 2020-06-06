@@ -109,7 +109,7 @@ ggsave("figures/incidence_deaths.png", width = 7, height = 5)
 resume <- grid.arrange(ambulatorio,hospitalizado,deaths)
 
 png("figures/incidence_resume.png", width = 900, height = 500)
-grid.arrange(fis.general,resume, nrow = 1)
+grid.arrange(incidencia,resume, nrow = 1)
 dev.off()
 
 

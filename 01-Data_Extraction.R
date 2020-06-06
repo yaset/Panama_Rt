@@ -5,8 +5,8 @@ rm(list = ls())
 source("functions/libraries.R") #### Libraries  
 library(dplyr)
 library(readxl)
-source("function/data_covid.R") #### Load data and functions to fix data
-source("function/functions.R") ### Load functions to analysis
+source("functions/data_covid.R") #### Load data and functions to fix data
+source("functions/functions.R") ### Load functions to analysis
 
 #### Load database
 database_original <- read_excel("data/data_base_panama.xls")
@@ -50,9 +50,6 @@ database_clean$sex[database_clean$sex == "MASCULINO"] <- "male"
 
 ### type of case
 
-database_clean %>%
-  tabyl(Type_of_case)
-
 database_clean$Type_of_case[database_clean$Type_of_case == "imported familiar"] <- "imported"
 database_clean$Type_of_case[is.na(database_clean$Type_of_case)] <- "local"
 
@@ -64,10 +61,6 @@ database_clean$age[is.na(database_clean$age)] <- rnorm(1,
                                                        sd = sd(database_clean$age, na.rm = TRUE)))
 
 #### region
-
-database_clean %>%
-  tabyl(Region)
-
 
 database_clean$Region[database_clean$Region == "Panama"] <- "panama"
 database_clean$Region[database_clean$Region == "PANAMA"] <- "panama"
@@ -126,11 +119,7 @@ trial2 <- database_clean %>%
 
 database_clean$fis[is.na(database_clean$fis) & !is.na(database_clean$Fecha_de_reporte)] <- trial2$fix_fis
 
-summary(database_clean$fis)
 
-
-database_clean %>%
-  tabyl(Region)
 
 #### Base de datos para trabajar
 write.csv(database_clean, "data/Panama_data.csv")
