@@ -66,9 +66,13 @@ dev.off()
 
 #### New calculate based on the results of sensitivy analysis 
 EG3 <- est.R0.EG(pan30,si,begin = 2,end = 38)
-EG3
 
-png("figures/EG_fit.png", width = 1000, height = 750)
+EG3$conf.int.r
+EG3$begin
+EG3$end
+
+
+png("figures/EG_fit.png", width = 750, height = 500)
 plotfit(EG3)
 dev.off()
 
@@ -80,19 +84,25 @@ c(EG3$r,EG3$conf.int.r)
 
 ## Maximum likelihood
 ML <- est.R0.ML(epid = pan30, GT = si, range = c(0.01,100))
+ML$begin
 ML$end
 ML$Rsquared
 plot(ML)
 
-png("figures/ML_fit.png", width = 1000, height = 750)
-plotfit(ML)
-dev.off()
 
 ML2 <- est.R0.ML(epid = pan30, GT = si, range = c(0.01,100), begin = 15, end = 38)
 
-ML2
-plotfit(ML2)
+ML2$begin
+ML2$end
 ML2$Rsquared
+
+
+png("figures/ML_fit.png", width = 750, height = 500)
+plotfit(ML2)
+dev.off()
+
+
+
 
 
 
@@ -107,7 +117,7 @@ R_val  <- sample_R(x,1000)
 summary(R_val)
 quantile(R_val, c(0.025,.975))
 
-png("figures/early_r.png", width = 1000, height = 750)
+png("figures/early_r.png", width = 750, height = 500)
 hist(R_val, border = "Black", col = "navy",
      xlab = "Values of R",
      main = "Sample of likely R values")

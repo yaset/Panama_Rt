@@ -12,6 +12,9 @@ data.imported <- data.imported %>%
 
 fis.general <- incidence(data.imported$fis, groups = data.imported$Type_of_case)
 
+data.imported %>%
+  tabyl(Type_of_case)
+
 incidencia <- plot(fis.general, border = "Black", color = colors.plot[c(7,1)])+
   theme_classic()+
   labs(title = "Epidemic Curve")+
