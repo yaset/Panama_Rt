@@ -77,7 +77,7 @@ write.csv(combine,"salidas/Panama_Rt_Cori2.csv")
 
 database <- data.frame(dates = fis$dates[1:45], num = fis$counts[1:45])
 
-scala <- max(database$num)/5
+scala2 <- max(database$num)/5
 
 incidencia <- ggplot(data = database, aes(x = dates, y = num))+
   geom_bar(stat = "identity", width = 0.9, fill = colors.plot[1], alpha = 0.4)+
@@ -87,49 +87,26 @@ incidencia <- ggplot(data = database, aes(x = dates, y = num))+
   geom_vline(xintercept = as.Date("2020-03-25"), linetype =2,color = colors.plot[7], size = 1)
 
 
-incidencia + 
+rt <- incidencia + 
   geom_line(data = combine,
-            mapping = aes(x = dates, y = `Mean(R)`*scala), 
+            mapping = aes(x = dates, y = `Mean(R)`*scala2), 
             inherit.aes = FALSE)+
   geom_ribbon(data = combine, 
-              mapping = aes(x = dates,ymin = `Quantile.0.025(R)`*scala, ymax = `Quantile.0.975(R)`*scala),
+              mapping = aes(x = dates,ymin = `Quantile.0.025(R)`*scala2, ymax = `Quantile.0.975(R)`*scala2),
               alpha = 0.3, fill = "Green",
               inherit.aes = FALSE)+
   scale_y_continuous(name = "Daily Incidence",
-                     sec.axis = sec_axis(~ ./scala, name = "Rt"))+
-  geom_hline(yintercept = scala, color = "Red", linetype = 3)+
+                     sec.axis = sec_axis(~ ./scala2, name = "Rt"))+
+  geom_hline(yintercept = scala2, color = "Red", linetype = 3)+
+  labs(title = "B: Time variant Effective Reproductive Number")+
   theme_cowplot()
 
 ggsave("figures/Rt.png",width = 10, height = 5)
 
+
+plot_grid(double,rt,nrow = 1)
+ggsave("figures/dynamics.png", width = 12, height = 7)
 ############################################################
 ####### PROJECTIONS
 ################################################################
 
-
-incidencia <- ggplot(data = database, aes(x = dates, y = num))+
-  geom_point(stat = "identity", color = colors.plot[1],  size = 2)+
-  geom_vline(xintercept = as.Date("2020-03-10"), linetype =2, color = colors.plot[4], size = 1)+
-  geom_vline(xintercept = as.Date("2020-03-16"), linetype =2,color = colors.plot[2], size = 1)+
-  geom_vline(xintercept = as.Date("2020-03-17"), linetype =2,color = colors.plot[3], size = 1)+
-  geom_vline(xintercept = as.Date("2020-03-25"), linetype =2,color = colors.plot[7], size = 1)
-
-incidencia
-
-
-
-set.seed(1)
-pro <- project(fis[26:32],R = 2.21, si = w, n_days = 14, n_sim = 10000,
-               R_fix_within = FALSE)
-
-
-project <- data.frame(dates = rownames(pro),
-                      median = apply(pro, 1, median),
-                      p25 = apply(pro, 1, quantile,0.025),
-                      p97 = apply(pro, 1, quantile,0.975))
-
-
-incidencia +
-  geom_ribbon(data = project, aes(x = as.Date(dates), ymin = p25, ymax = p97), 
-              inherit.aes = FALSE, alpha = 0.5)
-ggsave("figures/prueba_proj.png", width = 10, height = 5)

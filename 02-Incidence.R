@@ -17,7 +17,7 @@ data.imported %>%
 
 incidencia <- plot(fis.general, border = "Black", color = colors.plot[c(7,1)])+
   theme_classic()+
-  labs(title = "Epidemic Curve")+
+  labs(title = "A")+
   labs(groups = "Groups")
 
 ggsave("figures/incidence_general.png", width = 7, height = 5)
@@ -71,7 +71,7 @@ fis.ambulatorio <- fis.ambulatorio[1:60]
 
 ambulatorio <- plot(fis.ambulatorio, border = "Black", color = colors.plot[3])+
   theme_classic()+
-  labs(title = "Epidemic Curve by Ambulatory cases")
+  labs(title = "B")
 
 ggsave("figures/incidence_ambulatorio.png", width = 7, height = 5)
 
@@ -87,7 +87,7 @@ fis.hospitalizado <- fis.hospitalizado[1:55] ### linea critica para replicar
 
 hospitalizado <- plot(fis.hospitalizado, border = "Black", color = colors.plot[4])+
   theme_classic()+
-  labs(title = "Epidemic Curve by Hospitalized cases")
+  labs(title = "C")
 
 ggsave("figures/incidence_hospitalizados.png", width = 7, height = 5)
 
@@ -102,7 +102,7 @@ fis.muerto <- fis.muerto[1:37] ### linea critica para replicar
 
 deaths <- plot(fis.muerto, border = "Black", color = colors.plot[5])+
   theme_classic()+
-  labs(title = "Epidemic Curve by Deaths")
+  labs(title = "D")
 
 ggsave("figures/incidence_deaths.png", width = 7, height = 5)
 

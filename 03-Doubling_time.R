@@ -40,22 +40,22 @@ f.45 <- fit(fis)
 f.30 <- fit(fis[30:45])
 f.15 <- fit(fis[1:30])
 
-
+f.45$info$r.conf[1]
 
 plot.f45 <- plot(fis, border = "Black", color = colors.plot[1], fit = f.45)+
-  labs(title = "Timeframe 1-45 days",
-       subtitle = paste("r =",round(f.45$info$r,2),"cases/day"))+
+  labs(title = "Time frame 45 days",
+       subtitle = paste("r =",round(f.45$info$r,2),"95%CI (",round(f.45$info$r.conf[1],2),"-",round(f.45$info$r.conf[2],2),") cases/day"))+
   theme_cowplot()
 
 plot.f30 <- plot(fis, border = "Black", color = colors.plot[2], fit = f.30)+
-  labs(title = "Timeframe 30-45 days",
-       subtitle = paste("r =",round(f.30$info$r,2),"cases/day"))+
+  labs(title = "Time frame 15 days",
+       subtitle = paste("r =",round(f.30$info$r,2),"95%CI (",round(f.30$info$r.conf[1],2),"-",round(f.30$info$r.conf[2],2),") cases/day"))+
   theme_cowplot()
 
 
 plot.f15 <- plot(fis, border = "Black", color = colors.plot[3], fit = f.15)+
-  labs(title = "Timeframe 1-30 days",
-       subtitle = paste("r =",round(f.15$info$r,2),"cases/day"))+
+  labs(title = "Time frame 30 days",
+       subtitle = paste("r =",round(f.15$info$r,2),"95%CI (",round(f.15$info$r.conf[1],2),"-",round(f.15$info$r.conf[2],2),") cases/day"))+
   theme_cowplot()
 
 bside <- grid.arrange(plot.f30, plot.f15,nrow = 2)
@@ -114,11 +114,12 @@ m2 <- ggplot(data = database, aes(x = dates, y = num))+
   
   
   
-m2 +  geom_point(data = info, aes(week, y = d2*scala), size = 2, inherit.aes = FALSE)+
+double <- m2 +  geom_point(data = info, aes(week, y = d2*scala), size = 2, inherit.aes = FALSE)+
   geom_line(data = info, aes(week, y = d2*scala), linetype = 1,  inherit.aes = FALSE)+
   scale_y_continuous(name = "Daily Incidence",
-                   sec.axis = sec_axis(~ ./scala, name = "Doubling Time in days by Week"))+
-  theme_cowplot()
+                   sec.axis = sec_axis(~ ./scala, name = "Doubling Time"))+
+  theme_cowplot()+
+  labs(title = "A: Doubling Time")
  
 ggsave("figures/doubling_time.png",width = 10, height = 7)
 
