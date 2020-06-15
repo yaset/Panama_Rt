@@ -98,14 +98,15 @@ rt <- incidencia +
   scale_y_continuous(name = "Daily Incidence",
                      sec.axis = sec_axis(~ ./scala2, name = "Rt"))+
   geom_hline(yintercept = scala2, color = "Red", linetype = 3)+
-  labs(title = "B: Time variant Effective Reproductive Number")+
+  scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
+  labs(title = "C) Time variant Effective Reproductive Number")+
   theme_cowplot()
 
 ggsave("figures/Rt.png",width = 10, height = 5)
 
 
-plot_grid(double,rt,nrow = 1)
-ggsave("figures/dynamics.png", width = 12, height = 7)
+plot_grid(plot.f45,double,rt,nrow = 1)
+ggsave("figures/dynamics.png", width = 20, height = 8)
 ############################################################
 ####### PROJECTIONS
 ################################################################

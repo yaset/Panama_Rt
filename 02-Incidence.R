@@ -10,12 +10,24 @@ data.imported$fis <- as.Date(data.imported$fis, format = "%Y-%m-%d")
 data.imported <- data.imported %>%
   filter(fis >= "2020-02-10" & fis <= "2020-04-13")
 
+
+
+
 fis.general <- incidence(data.imported$fis, groups = data.imported$Type_of_case)
 
 data.imported %>%
   tabyl(Type_of_case)
 
-incidencia <- plot(fis.general, border = "Black", color = colors.plot[c(7,1)])+
+start.date <- as.Date("2020-01-30")
+end.date <- max(fis.general$dates)
+
+
+
+incidencia <- plot(fis.general, border = "Black", color = colors.plot[c(7,1)], alpha = 0.4)+
+  scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
+  scale_y_continuous(breaks = seq(0,150,by = 30), limits = c(0,150))+
+  geom_vline(xintercept = as.Date("2020-02-13"), linetype =2, color = colors.plot[4], size = 1.2)+
+  geom_vline(xintercept = as.Date("2020-03-03"), linetype =2, color = colors.plot[2], size = 1.2)+
   theme_classic()+
   labs(title = "A")+
   labs(groups = "Groups")
@@ -70,6 +82,10 @@ fis.ambulatorio <- incidence(data.2$fis)
 fis.ambulatorio <- fis.ambulatorio[1:60]
 
 ambulatorio <- plot(fis.ambulatorio, border = "Black", color = colors.plot[3])+
+  scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
+  scale_y_continuous(breaks = seq(0,150,by = 30), limits = c(0,150))+
+  geom_vline(xintercept = as.Date("2020-02-13"), linetype =2, color = colors.plot[4], size = 1.2)+
+  geom_vline(xintercept = as.Date("2020-03-03"), linetype =2, color = colors.plot[2], size = 1.2)+
   theme_classic()+
   labs(title = "B")
 
@@ -86,6 +102,10 @@ fis.hospitalizado <- incidence(data.3$fis)
 fis.hospitalizado <- fis.hospitalizado[1:55] ### linea critica para replicar
 
 hospitalizado <- plot(fis.hospitalizado, border = "Black", color = colors.plot[4])+
+  scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
+  scale_y_continuous(breaks = seq(0,20,by = 5), limits = c(0,20))+
+  geom_vline(xintercept = as.Date("2020-02-13"), linetype =2, color = colors.plot[4], size = 1.2)+
+  geom_vline(xintercept = as.Date("2020-03-03"), linetype =2, color = colors.plot[2], size = 1.2)+
   theme_classic()+
   labs(title = "C")
 
@@ -101,6 +121,10 @@ fis.muerto <- incidence(data.4$fis)
 fis.muerto <- fis.muerto[1:37] ### linea critica para replicar
 
 deaths <- plot(fis.muerto, border = "Black", color = colors.plot[5])+
+  scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
+  scale_y_continuous(breaks = seq(0,20,by = 5), limits = c(0,20))+
+  geom_vline(xintercept = as.Date("2020-02-13"), linetype =2, color = colors.plot[4], size = 1.2)+
+  geom_vline(xintercept = as.Date("2020-03-03"), linetype =2, color = colors.plot[2], size = 1.2)+
   theme_classic()+
   labs(title = "D")
 

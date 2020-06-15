@@ -25,7 +25,8 @@ fis <- incidence(dates_fis)
 
 fis <- fis[1:45] ##### ESTA LINEA ES VARIABLE, QUEDA 60 POR 60 DIAS DE PANAMA
 
-
+start.date <- as.Date("2020-01-30")
+end.date <- max(fis$dates)
 
 ################################################################
 ############# DAILY GROWTH RATE ###############################
@@ -42,9 +43,10 @@ f.15 <- fit(fis[1:30])
 
 f.45$info$r.conf[1]
 
-plot.f45 <- plot(fis, border = "Black", color = colors.plot[1], fit = f.45)+
-  labs(title = "Time frame 45 days",
+plot.f45 <- plot(fis, border = "White", color = colors.plot[1], fit = f.45, alpha = 0.4)+
+  labs(title = "A) Daily Growth Rate",
        subtitle = paste("r =",round(f.45$info$r,2),"95%CI (",round(f.45$info$r.conf[1],2),"-",round(f.45$info$r.conf[2],2),") cases/day"))+
+  scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
   theme_cowplot()
 
 plot.f30 <- plot(fis, border = "Black", color = colors.plot[2], fit = f.30)+
@@ -90,7 +92,10 @@ dailys.rates <- c(f.7$info$r,
 
 info <- data.frame(rates = dailys.rates)
 
-info$d2 <- log(2)/log(1+info$rates)
+###info$d2 <- log(2)/log(1+info$rates) ##### CALCULATE
+info$d2 <- log(2)/info$rates ##### CALCULATE
+
+
 fis
 date.inicial <- min(fis$dates)
 date.end <- max(fis$dates)
@@ -99,6 +104,7 @@ info$week <- seq(date.inicial+6,date.end,by = "week")
 info <- info %>%
   filter(d2 >= 0)
 
+info <- info[3:6,]
 write.csv(info,"salidas/rate_growth_week.csv")
 
 scala <- max(info$d2)/10
@@ -116,10 +122,11 @@ m2 <- ggplot(data = database, aes(x = dates, y = num))+
   
 double <- m2 +  geom_point(data = info, aes(week, y = d2*scala), size = 2, inherit.aes = FALSE)+
   geom_line(data = info, aes(week, y = d2*scala), linetype = 1,  inherit.aes = FALSE)+
+  scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
   scale_y_continuous(name = "Daily Incidence",
                    sec.axis = sec_axis(~ ./scala, name = "Doubling Time"))+
   theme_cowplot()+
-  labs(title = "A: Doubling Time")
+  labs(title = "B) Doubling Time")
  
 ggsave("figures/doubling_time.png",width = 10, height = 7)
 
