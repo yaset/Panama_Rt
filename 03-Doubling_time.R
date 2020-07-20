@@ -44,9 +44,10 @@ f.15 <- fit(fis[1:30])
 f.45$info$r.conf[1]
 
 plot.f45 <- plot(fis, border = "White", color = colors.plot[1], fit = f.45, alpha = 0.4)+
-  labs(title = "A) Daily Growth Rate",
+  labs(title = "A.",
        subtitle = paste("r =",round(f.45$info$r,2),"95%CI (",round(f.45$info$r.conf[1],2),"-",round(f.45$info$r.conf[2],2),") cases/day"))+
   scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
+  scale_y_continuous(breaks = seq(0,120,by = 20), limits = c(0,120))+
   theme_cowplot()
 
 plot.f30 <- plot(fis, border = "Black", color = colors.plot[2], fit = f.30)+
@@ -117,16 +118,17 @@ m2 <- ggplot(data = database, aes(x = dates, y = num))+
   geom_vline(xintercept = as.Date("2020-03-16"), linetype =2,color = colors.plot[2], size = 1)+
   geom_vline(xintercept = as.Date("2020-03-17"), linetype =2,color = colors.plot[3], size = 1)+
   geom_vline(xintercept = as.Date("2020-03-25"), linetype =2,color = colors.plot[7], size = 1)
-  
+
   
   
 double <- m2 +  geom_point(data = info, aes(week, y = d2*scala), size = 2, inherit.aes = FALSE)+
   geom_line(data = info, aes(week, y = d2*scala), linetype = 1,  inherit.aes = FALSE)+
   scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
   scale_y_continuous(name = "Daily Incidence",
-                   sec.axis = sec_axis(~ ./scala, name = "Doubling Time"))+
+                   sec.axis = sec_axis(~ ./scala, name = "Doubling Time"),breaks = seq(0,120,by = 20),
+                   limits = c(0,120))+
   theme_cowplot()+
-  labs(title = "B) Doubling Time")
+  labs(title = "B.")
  
 ggsave("figures/doubling_time.png",width = 10, height = 7)
 

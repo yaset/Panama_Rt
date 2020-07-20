@@ -20,30 +20,31 @@ for(i in 1:length(central)){
 
 aa <- central$Panama
 
-tt <- data.frame(central[[1]][2])
-tt <- cbind(tt, central[[2]][2])
-tt <- cbind(tt, central[[3]][2])
-tt <- cbind(tt, central[[4]][2])
-tt <- cbind(tt, central[[5]][2])
-tt <- cbind(tt, central[[6]][2])
-tt <- cbind(tt, central[[7]][2])
+tt <- data.frame(central[[1]][3])
+tt <- cbind(tt, central[[2]][3])
+tt <- cbind(tt, central[[3]][3])
+tt <- cbind(tt, central[[4]][3])
+tt <- cbind(tt, central[[5]][3])
+tt <- cbind(tt, central[[6]][3])
+tt <- cbind(tt, central[[7]][3])
 
 tt <- stack(tt)
 tt$dates <- rep(aa$dates,7)
+max(tt$values)
 
 lancet <- pal_lancet("lanonc")(9)
 
 miscolores <- colorRampPalette(lancet)
 
 
-centro1 <- ggplot(data = tt, aes( x = dates, y = log(values)))+
+centro1 <- ggplot(data = tt, aes( x = dates, y = values))+
   geom_point(aes(color = ind))+
   geom_line(aes(color = ind))+
   labs(color = "Countries", labels = central_america)+
-  ylab("Log(Cumulative Cases)")+
+  ylab("Cumulative Cases")+
   xlab("")+
   theme_cowplot()+
-  scale_y_continuous(breaks = seq(0,15,by = 1))+
+  scale_y_continuous(breaks = seq(0,400,by = 40))+
   scale_color_manual(labels = central_america, values = miscolores(20))
 
   
@@ -69,38 +70,40 @@ for(i in 1:length(latin)){
 
 aa <- latin$Panama
 
-tt <- data.frame(latin[[1]][2])
-tt <- cbind(tt, latin[[2]][2])
-tt <- cbind(tt, latin[[3]][2])
-tt <- cbind(tt, latin[[4]][2])
-tt <- cbind(tt, latin[[5]][2])
-tt <- cbind(tt, latin[[6]][2])
-tt <- cbind(tt, latin[[7]][2])
-tt <- cbind(tt, latin[[8]][2])
-tt <- cbind(tt, latin[[9]][2])
-tt <- cbind(tt, latin[[10]][2])
-tt <- cbind(tt, latin[[11]][2])
+tt <- data.frame(latin[[1]][3])
+tt <- cbind(tt, latin[[2]][3])
+tt <- cbind(tt, latin[[3]][3])
+tt <- cbind(tt, latin[[4]][3])
+tt <- cbind(tt, latin[[5]][3])
+tt <- cbind(tt, latin[[6]][3])
+tt <- cbind(tt, latin[[7]][3])
+tt <- cbind(tt, latin[[8]][3])
+tt <- cbind(tt, latin[[9]][3])
+tt <- cbind(tt, latin[[10]][3])
+tt <- cbind(tt, latin[[11]][3])
 
 tt <- stack(tt)
 tt$dates <- rep(aa$dates,11)
-
+max(tt$values)
 lancet <- pal_lancet("lanonc")(9)
+
+max(tt$values)
 
 miscolores <- colorRampPalette(lancet)
 
-amer1 <- ggplot(data = tt, aes( x = dates, y = log(values)))+
+amer1 <- ggplot(data = tt, aes( x = dates, y = values))+
   geom_point(aes(color = ind))+
   geom_line(aes(color = ind))+
   labs(color = "Countries", labels = latin_america)+
-  ylab("log(Cumulative Cases)")+
+  ylab("Cumulative Cases")+
   theme_cowplot()+
-  scale_y_continuous(breaks = seq(0,15,by = 1))+
+  scale_y_continuous(breaks = seq(0,18000,by = 1800), limits = c(0,18000))+
   scale_color_manual(labels = latin_america, values = miscolores(20))
 
 
 #####################################
 
-north_america <- c("Panama","Mexico", "Cuba", "Dominican Republic", "Haiti")
+north_america <- c("Panama", "Cuba", "Dominican Republic", "Haiti")
 
 latin <- list()
 for(i in 1:length(north_america)){
@@ -115,27 +118,26 @@ for(i in 1:length(latin)){
 
 aa <- latin$Panama
 
-tt <- data.frame(latin[[1]][2])
-tt <- cbind(tt, latin[[2]][2])
-tt <- cbind(tt, latin[[3]][2])
-tt <- cbind(tt, latin[[4]][2])
-tt <- cbind(tt, latin[[5]][2])
-
+tt <- data.frame(latin[[1]][3])
+tt <- cbind(tt, latin[[2]][3])
+tt <- cbind(tt, latin[[3]][3])
+tt <- cbind(tt, latin[[4]][3])
 tt <- stack(tt)
-tt$dates <- rep(aa$dates,5)
+tt$dates <- rep(aa$dates,4)
+max(tt$values)
 
-lancet <- pal_lancet("lanonc")(5)
+lancet <- pal_lancet("lanonc")(4)
 
 miscolores <- colorRampPalette(lancet)
 
-car1 <- ggplot(data = tt, aes( x = dates, y = log(values)))+
+car1 <- ggplot(data = tt, aes( x = dates, y = values))+
   geom_point(aes(color = ind))+
   geom_line(aes(color = ind))+
   labs(color = "Countries", labels = north_america)+
-  ylab("log(Cumulative Cases)")+
+  ylab("Cumulative Cases")+
   theme_cowplot()+
-  scale_y_continuous(breaks = seq(0,15,by = 1))+
-  scale_color_manual(labels = north_america, values = miscolores(5))
+  scale_y_continuous(breaks = seq(0,600,by = 60))+
+  scale_color_manual(labels = north_america, values = miscolores(4))
 
 
 
@@ -156,22 +158,22 @@ central <- list()
   
   aa <- central$Panama
   
-  tt <- data.frame(central[[1]][2])
-  tt <- cbind(tt, central[[2]][2])
-  tt <- cbind(tt, central[[3]][2])
-  tt <- cbind(tt, central[[4]][2])
-  tt <- cbind(tt, central[[5]][2])
-  tt <- cbind(tt, central[[6]][2])
-  tt <- cbind(tt, central[[7]][2])
+  tt <- data.frame(central[[1]][3])
+  tt <- cbind(tt, central[[2]][3])
+  tt <- cbind(tt, central[[3]][3])
+  tt <- cbind(tt, central[[4]][3])
+  tt <- cbind(tt, central[[5]][3])
+  tt <- cbind(tt, central[[6]][3])
+  tt <- cbind(tt, central[[7]][3])
   
   tt <- stack(tt)
   tt$dates <- rep(aa$dates,7)
-  
-  centro2 <- ggplot(data = tt, aes( x = dates, y = log(values)))+
+  max(tt$values)
+  centro2 <- ggplot(data = tt, aes( x = dates, y = values))+
     geom_point(aes(color = ind))+
     geom_line(aes(color = ind))+
     labs(color = "Countries", labels = central_america)+
-    ylab("Log(Cumulative Deaths)")+
+    ylab("Cumulative Deaths")+
     xlab("")+
     theme_cowplot()+
     scale_y_continuous(breaks = seq(0,15,by = 1))+
@@ -192,30 +194,30 @@ for(i in 1:length(latin)){
 
 aa <- latin$Panama
 
-tt <- data.frame(latin[[1]][2])
-tt <- cbind(tt, latin[[2]][2])
-tt <- cbind(tt, latin[[3]][2])
-tt <- cbind(tt, latin[[4]][2])
-tt <- cbind(tt, latin[[5]][2])
-tt <- cbind(tt, latin[[6]][2])
-tt <- cbind(tt, latin[[7]][2])
-tt <- cbind(tt, latin[[8]][2])
-tt <- cbind(tt, latin[[9]][2])
-tt <- cbind(tt, latin[[10]][2])
-tt <- cbind(tt, latin[[11]][2])
+tt <- data.frame(latin[[1]][3])
+tt <- cbind(tt, latin[[2]][3])
+tt <- cbind(tt, latin[[3]][3])
+tt <- cbind(tt, latin[[4]][3])
+tt <- cbind(tt, latin[[5]][3])
+tt <- cbind(tt, latin[[6]][3])
+tt <- cbind(tt, latin[[7]][3])
+tt <- cbind(tt, latin[[8]][3])
+tt <- cbind(tt, latin[[9]][3])
+tt <- cbind(tt, latin[[10]][3])
+tt <- cbind(tt, latin[[11]][3])
 
 tt <- stack(tt)
 tt$dates <- rep(aa$dates,11)
+max(tt$values)
 
-
-amer2 <- ggplot(data = tt, aes( x = dates, y = log(values)))+
+amer2 <- ggplot(data = tt, aes( x = dates, y = values))+
   geom_point(aes(color = ind))+
   geom_line(aes(color = ind))+
   labs(color = "Countries", labels = latin_america)+
-  ylab("Log(Cumulative Deaths)")+
+  ylab("Cumulative Deaths")+
   xlab("")+
   theme_cowplot()+
-  scale_y_continuous(breaks = seq(0,10,by = 1))+
+  scale_y_continuous(breaks = seq(0,1200,by = 120))+
   scale_color_manual(labels = latin_america, values = miscolores(20))
 
 
@@ -235,24 +237,24 @@ for(i in 1:length(latin)){
 
 aa <- latin$Panama
 
-tt <- data.frame(latin[[1]][2])
-tt <- cbind(tt, latin[[2]][2])
-tt <- cbind(tt, latin[[3]][2])
-tt <- cbind(tt, latin[[4]][2])
-tt <- cbind(tt, latin[[5]][2])
+tt <- data.frame(latin[[1]][3])
+tt <- cbind(tt, latin[[2]][3])
+tt <- cbind(tt, latin[[3]][3])
+tt <- cbind(tt, latin[[4]][3])
+tt <- cbind(tt, latin[[5]][3])
 
 tt <- stack(tt)
-tt$dates <- rep(aa$dates,5)
+tt$dates <- rep(aa$dates,4)
+max(tt$values)
 
-
-car2 <- ggplot(data = tt, aes( x = dates, y = log(values)))+
+car2 <- ggplot(data = tt, aes( x = dates, y = values))+
   geom_point(aes(color = ind))+
   geom_line(aes(color = ind))+
   labs(color = "Countries", labels = north_america)+
-  ylab("Log(Cumulative Deaths)")+
+  ylab("Cumulative Deaths")+
   xlab("")+
   theme_cowplot()+
-  scale_y_continuous(breaks = seq(0,10,by = 1))+
+  scale_y_continuous(breaks = seq(0,40,by = 4))+
   scale_color_manual(labels = north_america, values = miscolores(5))
 
 plot_grid(centro1,centro2,amer1,amer2,car1,car2, nrow = 3) #### arreglar en ppt

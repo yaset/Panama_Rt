@@ -56,9 +56,9 @@ cum <- cumulate(fis)
 cum$counts
 
 
-t_start <- seq(2,nrow(fis[21:45])-7) #### numero de casos acumulados > 25
+t_start <- seq(2,nrow(fis[18:45])-7) #### numero de casos acumulados > 25
 t_end <- t_start + 7
-res <- estimate_R(incid = fis[21:45],
+res <- estimate_R(incid = fis[18:45],
                   method = "non_parametric_si",
                   config = make_config(list(
                     si_distr = discrete_si_distr,
@@ -99,7 +99,9 @@ rt <- incidencia +
                      sec.axis = sec_axis(~ ./scala2, name = "Rt"))+
   geom_hline(yintercept = scala2, color = "Red", linetype = 3)+
   scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
-  labs(title = "C) Time variant Effective Reproductive Number")+
+  scale_y_continuous(breaks = seq(0,120,by = 20), limits = c(0,120))+
+  ylab("Daily Incidence")+
+  labs(title = "C.")+
   theme_cowplot()
 
 ggsave("figures/Rt.png",width = 10, height = 5)

@@ -79,7 +79,7 @@ data.2 <- data_fis %>%
 
 data.2$fis <- as.Date(data.2$fis, format = "%Y-%m-%d")
 fis.ambulatorio <- incidence(data.2$fis)
-fis.ambulatorio <- fis.ambulatorio[1:60]
+fis.ambulatorio <- fis.ambulatorio[1:57]
 
 ambulatorio <- plot(fis.ambulatorio, border = "Black", color = colors.plot[3])+
   scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
@@ -90,6 +90,11 @@ ambulatorio <- plot(fis.ambulatorio, border = "Black", color = colors.plot[3])+
   labs(title = "B")
 
 ggsave("figures/incidence_ambulatorio.png", width = 7, height = 5)
+
+table_excel <- data.frame(dates = fis.ambulatorio$dates, cases = fis.ambulatorio$counts)
+
+write.csv(table_excel, "salidas/ambulatorios.csv")
+
 
 #### Pacientes hospitalizados
 
@@ -102,7 +107,7 @@ fis.hospitalizado <- incidence(data.3$fis)
 fis.hospitalizado <- fis.hospitalizado[1:55] ### linea critica para replicar
 
 hospitalizado <- plot(fis.hospitalizado, border = "Black", color = colors.plot[4])+
-  scale_x_date(breaks = seq(start.date,end.date, by = "2 week"), date_labels = "%m-%d", limits = c(start.date,end.date))+
+  scale_x_date(breaks = seq(start.date,end.date, by = "2 weeks"), date_labels = "%m-%d", limits = c(start.date,end.date))+
   scale_y_continuous(breaks = seq(0,20,by = 5), limits = c(0,20))+
   geom_vline(xintercept = as.Date("2020-02-13"), linetype =2, color = colors.plot[4], size = 1.2)+
   geom_vline(xintercept = as.Date("2020-03-03"), linetype =2, color = colors.plot[2], size = 1.2)+
@@ -110,6 +115,12 @@ hospitalizado <- plot(fis.hospitalizado, border = "Black", color = colors.plot[4
   labs(title = "C")
 
 ggsave("figures/incidence_hospitalizados.png", width = 7, height = 5)
+
+
+table_excel <- data.frame(dates = fis.hospitalizado$dates, cases = fis.hospitalizado$counts)
+
+write.csv(table_excel, "salidas/hospitalizado.csv")
+
 
 ##### Pacientes fallecidos
 
@@ -130,12 +141,15 @@ deaths <- plot(fis.muerto, border = "Black", color = colors.plot[5])+
 
 ggsave("figures/incidence_deaths.png", width = 7, height = 5)
 
+table_excel <- data.frame(dates = fis.muerto$dates, cases = fis.muerto$counts)
+
+write.csv(table_excel, "salidas/fallecidos.csv")
 
 #### grafico conjunto
 
 resume <- grid.arrange(ambulatorio,hospitalizado,deaths)
 
-png("figures/incidence_resume.png", width = 900, height = 500)
+png("figures/incidence_resume.png", width = 800, height = 450)
 grid.arrange(incidencia,resume, nrow = 1)
 dev.off()
 

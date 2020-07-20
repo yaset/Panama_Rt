@@ -48,8 +48,8 @@ title(main = "Discrete distribution of the serial interval of COVID-19")
 
 library(R0)
 
-pan30 <- fis$counts[1:45] #### LINEA CRITICA!!!
-names(pan30) <- fis$dates[1:45]
+pan30 <- fis$counts[1:38] #### LINEA CRITICA!!!
+names(pan30) <- fis$dates[1:38]
 si <- R0::generation.time(type = "gamma", c(4.7,2.9))
 #### General Growth Rate
 EG <- R0::est.R0.EG(pan30,si)
@@ -58,14 +58,14 @@ EG
 
 #### Sensitivity analysis
 EG2 <- sensitivity.analysis(pan30, GT = si, est.method = "EG", sa.type = "time",
-                            begin = 1:22, end = 23:44)
+                            begin = 1:19, end = 20:38)
 
 png("figures/sensitive.png", width = 1000, height = 750)
 plot(EG2)
 dev.off()
 
 #### New calculate based on the results of sensitivy analysis 
-EG3 <- est.R0.EG(pan30,si,begin = 2,end = 38)
+EG3 <- est.R0.EG(pan30,si,begin = 2,end = 36)
 
 EG3$conf.int.r
 EG3$begin
@@ -83,7 +83,7 @@ c(EG3$R,EG3$conf.int)
 c(EG3$r,EG3$conf.int.r)
 
 ## Maximum likelihood
-ML <- est.R0.ML(epid = pan30, GT = si, range = c(0.01,100))
+ML <- est.R0.ML(epid = pan30[2:36], GT = si, range = c(0.01,100))
 ML$begin
 ML$end
 ML$Rsquared
@@ -110,7 +110,8 @@ dev.off()
 pan30
 cum <- cumulate(fis)
 cum$counts
-x<- get_R(fis, si = w, max_R = 3) ### VENTANA DESDE EL DIA 15
+fis$dates
+x<- get_R(fis[12:37], si = w, max_R = 3) ### VENTANA DESDE EL DIA 15
 x$R_ml
 
 R_val  <- sample_R(x,1000)
